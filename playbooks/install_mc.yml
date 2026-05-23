@@ -1,10 +1,19 @@
 ---
+- name: Проверка входных данных
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Проверить, что IP-адрес передан
+      ansible.builtin.fail:
+        msg: "Ошибка: Вы не указали IP-адрес в форме Survey!"
+      when: target_host is not defined or target_host | trim == ""
+
 - name: Установка Midnight Commander
-  hosts: all
+  hosts: "{{ target_host }}"
+  gather_facts: false
   become: true
   tasks:
     - name: Установить пакет mc
       ansible.builtin.package:
         name: mc
         state: present
-
