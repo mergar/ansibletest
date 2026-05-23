@@ -1,5 +1,5 @@
 ---
-- name: Проверка входных данных
+- name: Проверка данных и динамическое создание хоста
   hosts: localhost
   gather_facts: false
   tasks:
@@ -8,8 +8,14 @@
         msg: "Ошибка: Вы не указали IP-адрес в форме Survey!"
       when: target_host is not defined or target_host | trim == ""
 
+    - name: Добавить динамические хосты в память Ansible
+      ansible.builtin.add_host:
+        name: "{{ item | trim }}"
+        group: "dynamic_hosts"
+      loop: "{{ target_host.split(',') }}"
+
 - name: Установка Midnight Commander
-  hosts: "{{ target_host }}"
+  hosts: dynamic_hosts
   gather_facts: false
   become: true
   tasks:
