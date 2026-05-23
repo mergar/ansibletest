@@ -1,0 +1,10 @@
+---
+- name: Установка Midnight Commander
+  hosts: all
+  become: true
+  tasks:
+    - name: Установить пакет mc
+      ansible.builtin.package:
+        name: mc
+        state: present
+
